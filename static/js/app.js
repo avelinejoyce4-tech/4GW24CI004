@@ -1,0 +1,1 @@
+function togglePass(id, icon) { const inp = document.getElementById(id); inp.type = inp.type === 'password' ? 'text' : 'password'; icon.className = inp.type === 'password' ? 'fa fa-eye pass-toggle' : 'fa fa-eye-slash pass-toggle'; }

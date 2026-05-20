@@ -1,0 +1,658 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --border: #1e1e2e;
+    --accent: #e63946;
+    --accent2: #ff6b6b;
+    --text: #f0f0f0;
+    --muted: #666;
+    --success: #2ecc71;
+    --wave: #e63946;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 16px 60px;
+  }
+
+  /* ── Top bar ── */
+  .topbar {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0 10px;
+  }
+  .topbar a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color .2s;
+  }
+  .topbar a:hover { color: var(--text); }
+  .topbar-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 18px;
+    color: var(--accent);
+    letter-spacing: 2px;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    margin: 40px 0 32px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 900;
+    letter-spacing: 3px;
+    line-height: 1.1;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 16px;
+    letter-spacing: 1px;
+  }
+
+  /* ── Upload card ── */
+  .upload-card {
+    width: 100%;
+    max-width: 680px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .upload-card::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(230,57,70,0.15), transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── Drop zone ── */
+  .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .25s, background .25s;
+    position: relative;
+  }
+  .drop-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(230,57,70,0.05);
+  }
+  .drop-zone.has-file {
+    border-color: var(--success);
+    background: rgba(46,204,113,0.04);
+  }
+  .drop-icon {
+    font-size: 52px;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: block;
+    transition: transform .3s;
+  }
+  .drop-zone:hover .drop-icon { transform: scale(1.1) translateY(-4px); }
+  .drop-zone h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .drop-zone p { color: var(--muted); font-size: 13px; }
+  .drop-zone input[type=file] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer;
+  }
+  .file-formats {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .fmt-badge {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* ── Selected file info ── */
+  .file-info {
+    display: none;
+    align-items: center;
+    gap: 14px;
+    margin-top: 20px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+  }
+  .file-info.visible { display: flex; }
+  .file-info i { font-size: 28px; color: var(--accent); }
+  .file-meta { flex: 1; }
+  .file-name { font-size: 15px; font-weight: 600; color: var(--text); }
+  .file-size { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .file-remove {
+    background: none; border: none; color: var(--muted);
+    cursor: pointer; font-size: 18px; transition: color .2s;
+  }
+  .file-remove:hover { color: var(--accent); }
+
+  /* ── Language selector ── */
+  .options-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .options-row label {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  .lang-select {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 10px 14px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    min-width: 160px;
+    transition: border-color .2s;
+  }
+  .lang-select:focus { border-color: var(--accent); }
+  .lang-select option { background: #1a1a2a; }
+
+  /* ── Convert button ── */
+  .convert-btn {
+    width: 100%;
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--accent);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: background .2s, transform .1s;
+  }
+  .convert-btn:hover:not(:disabled) { background: var(--accent2); transform: translateY(-1px); }
+  .convert-btn:active:not(:disabled) { transform: translateY(0); }
+  .convert-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .convert-btn .btn-shimmer {
+    position: absolute; top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    animation: shimmer 2s infinite;
+  }
+  @keyframes shimmer { to { left: 160%; } }
+
+  /* ── Progress / waveform ── */
+  .progress-wrap {
+    display: none;
+    margin-top: 20px;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .progress-wrap.visible { display: flex; }
+  .wave-bars {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    height: 32px;
+  }
+  .wave-bar {
+    width: 4px;
+    background: var(--wave);
+    border-radius: 2px;
+    animation: wavePulse 1s ease-in-out infinite;
+  }
+  .wave-bar:nth-child(1) { animation-delay: 0s;    height: 12px; }
+  .wave-bar:nth-child(2) { animation-delay: .1s;   height: 20px; }
+  .wave-bar:nth-child(3) { animation-delay: .2s;   height: 28px; }
+  .wave-bar:nth-child(4) { animation-delay: .3s;   height: 18px; }
+  .wave-bar:nth-child(5) { animation-delay: .4s;   height: 24px; }
+  .wave-bar:nth-child(6) { animation-delay: .5s;   height: 14px; }
+  .wave-bar:nth-child(7) { animation-delay: .6s;   height: 30px; }
+  .wave-bar:nth-child(8) { animation-delay: .7s;   height: 16px; }
+  @keyframes wavePulse {
+    0%, 100% { transform: scaleY(1); opacity: .7; }
+    50%       { transform: scaleY(1.8); opacity: 1; }
+  }
+  .progress-label {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-top: 6px;
+  }
+
+  /* ── Result box ── */
+  .result-wrap {
+    display: none;
+    margin-top: 28px;
+    animation: fadeUp .4s ease;
+  }
+  .result-wrap.visible { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .result-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+  }
+  .result-actions { display: flex; gap: 8px; }
+  .action-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Rajdhani', sans-serif;
+  }
+  .action-btn:hover { border-color: var(--accent); color: var(--text); }
+  .result-text {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text);
+    min-height: 100px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .result-meta {
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .result-meta span { display: flex; align-items: center; gap: 5px; }
+
+  /* ── Error ── */
+  .error-box {
+    display: none;
+    margin-top: 20px;
+    background: rgba(230,57,70,0.08);
+    border: 1px solid rgba(230,57,70,0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: var(--accent2);
+    line-height: 1.5;
+  }
+  .error-box.visible { display: block; }
+
+  /* ── Stats row ── */
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 32px;
+    width: 100%;
+    max-width: 680px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    flex: 1;
+    min-width: 140px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+  }
+  .stat-desc { font-size: 12px; color: var(--muted); margin-top: 4px; letter-spacing: 1px; }
+
+  /* ── Audio player ── */
+  .audio-player-wrap {
+    display: none;
+    margin-top: 16px;
+  }
+  .audio-player-wrap.visible { display: block; }
+  audio {
+    width: 100%;
+    border-radius: 8px;
+    outline: none;
+    filter: invert(0.85) hue-rotate(180deg);
+  }
+</style>
+
+<div class="topbar">
+  <a href="/home"><i class="fa fa-arrow-left"></i> Back to VoxAI</a>
+  <span class="topbar-title">VOX AI</span>
+  <span style="width:120px"></span>
+</div>
+
+<div class="hero">
+  <h1>AUDIO TO <span>TEXT</span></h1>
+  <p>Upload any audio file and convert speech to text instantly</p>
+</div>
+
+<div class="upload-card">
+
+  <!-- Drop Zone -->
+  <div class="drop-zone" id="dropZone">
+    <i class="fa fa-microphone drop-icon"></i>
+    <h3>DROP AUDIO FILE HERE</h3>
+    <p>or click to browse your files</p>
+    <div class="file-formats">
+      <span class="fmt-badge">MP3</span>
+      <span class="fmt-badge">WAV</span>
+      <span class="fmt-badge">M4A</span>
+      <span class="fmt-badge">WEBM</span>
+      <span class="fmt-badge">OGG</span>
+      <span class="fmt-badge">FLAC</span>
+    </div>
+    <input type="file" id="audioFile" accept="audio/*">
+  </div>
+
+  <!-- File Info -->
+  <div class="file-info" id="fileInfo">
+    <i class="fa fa-file-audio"></i>
+    <div class="file-meta">
+      <div class="file-name" id="fileName">—</div>
+      <div class="file-size" id="fileSize">—</div>
+    </div>
+    <button class="file-remove" id="removeFile" title="Remove"><i class="fa fa-times"></i></button>
+  </div>
+
+  <!-- Audio Player Preview -->
+  <div class="audio-player-wrap" id="audioPlayerWrap">
+    <audio id="audioPreview" controls></audio>
+  </div>
+
+  <!-- Options -->
+  <div class="options-row">
+    <label><i class="fa fa-globe"></i> &nbsp;LANGUAGE</label>
+    <select class="lang-select" id="langSelect">
+      <option value="en">English</option>
+      <option value="hi">हिन्दी — Hindi</option>
+      <option value="ta">தமிழ் — Tamil</option>
+      <option value="kn">ಕನ್ನಡ — Kannada</option>
+      <option value="ml">മലയാളം — Malayalam</option>
+      <option value="te">తెలుగు — Telugu</option>
+      <option value="mr">मराठी — Marathi</option>
+      <option value="bn">বাংলা — Bengali</option>
+      <option value="gu">ગુજરાતી — Gujarati</option>
+    </select>
+  </div>
+
+  <!-- Convert Button -->
+  <button class="convert-btn" id="convertBtn" disabled onclick="convertAudio()">
+    <span class="btn-shimmer"></span>
+    <i class="fa fa-waveform"></i> &nbsp;CONVERT TO TEXT
+  </button>
+
+  <!-- Progress -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="wave-bars">
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">PROCESSING AUDIO...</div>
+  </div>
+
+  <!-- Error -->
+  <div class="error-box" id="errorBox"></div>
+
+  <!-- Result -->
+  <div class="result-wrap" id="resultWrap">
+    <div class="result-header">
+      <span class="result-label">TRANSCRIPTION RESULT</span>
+      <div class="result-actions">
+        <button class="action-btn" onclick="copyText()">
+          <i class="fa fa-copy"></i> Copy
+        </button>
+        <button class="action-btn" onclick="downloadText()">
+          <i class="fa fa-download"></i> Download
+        </button>
+        <button class="action-btn" onclick="clearAll()">
+          <i class="fa fa-rotate-left"></i> New
+        </button>
+      </div>
+    </div>
+    <div class="result-text" id="resultText"></div>
+    <div class="result-meta">
+      <span><i class="fa fa-clock"></i> <span id="metaTime">—</span></span>
+      <span><i class="fa fa-font"></i> <span id="metaWords">—</span> words</span>
+      <span><i class="fa fa-robot"></i> <span id="metaProvider">—</span></span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Stats -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-num" id="statConverted">0</div>
+    <div class="stat-desc">FILES CONVERTED</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" id="statWords">0</div>
+    <div class="stat-desc">WORDS EXTRACTED</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">9</div>
+    <div class="stat-desc">LANGUAGES SUPPORTED</div>
+  </div>
+</div>
+
+<script>
+  let selectedFile = null;
+  let totalConverted = parseInt(localStorage.getItem('vox_converted') || '0');
+  let totalWords = parseInt(localStorage.getItem('vox_words') || '0');
+  document.getElementById('statConverted').textContent = totalConverted;
+  document.getElementById('statWords').textContent = totalWords;
+
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('audioFile');
+
+  // Drag & drop
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const f = e.dataTransfer.files[0];
+    if (f && f.type.startsWith('audio/')) setFile(f);
+  });
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) setFile(fileInput.files[0]);
+  });
+
+  document.getElementById('removeFile').addEventListener('click', clearAll);
+
+  function setFile(file) {
+    selectedFile = file;
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = formatSize(file.size);
+    document.getElementById('fileInfo').classList.add('visible');
+    dropZone.classList.add('has-file');
+
+    // Audio preview
+    const url = URL.createObjectURL(file);
+    document.getElementById('audioPreview').src = url;
+    document.getElementById('audioPlayerWrap').classList.add('visible');
+
+    document.getElementById('convertBtn').disabled = false;
+    hideError(); hideResult();
+  }
+
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  async function convertAudio() {
+    if (!selectedFile) return;
+
+    const lang = document.getElementById('langSelect').value;
+    const btn = document.getElementById('convertBtn');
+
+    btn.disabled = true;
+    hideError(); hideResult();
+    showProgress('UPLOADING AUDIO...');
+
+    const formData = new FormData();
+    formData.append('audio', selectedFile);
+
+    const start = Date.now();
+
+    try {
+      showProgress('TRANSCRIBING SPEECH...');
+      const res = await fetch('/api/stt?language=' + encodeURIComponent(lang), {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.transcript) {
+        throw new Error(data.error || 'Transcription failed. Please check your API keys in .env file.');
+      }
+
+      const elapsed = ((Date.now() - start) / 1000).toFixed(1) + 's';
+      const wordCount = data.transcript.trim().split(/\s+/).filter(Boolean).length;
+
+      showResult(data.transcript, elapsed, wordCount, data.provider || 'AI');
+
+      // Update stats
+      totalConverted++;
+      totalWords += wordCount;
+      localStorage.setItem('vox_converted', totalConverted);
+      localStorage.setItem('vox_words', totalWords);
+      document.getElementById('statConverted').textContent = totalConverted;
+      document.getElementById('statWords').textContent = totalWords;
+
+    } catch (err) {
+      showError(err.message);
+    } finally {
+      hideProgress();
+      btn.disabled = false;
+    }
+  }
+
+  function showProgress(msg) {
+    document.getElementById('progressLabel').textContent = msg;
+    document.getElementById('progressWrap').classList.add('visible');
+  }
+  function hideProgress() { document.getElementById('progressWrap').classList.remove('visible'); }
+
+  function showResult(text, time, words, provider) {
+    document.getElementById('resultText').textContent = text;
+    document.getElementById('metaTime').textContent = time;
+    document.getElementById('metaWords').textContent = words;
+    document.getElementById('metaProvider').textContent = provider;
+    document.getElementById('resultWrap').classList.add('visible');
+  }
+  function hideResult() { document.getElementById('resultWrap').classList.remove('visible'); }
+
+  function showError(msg) {
+    const el = document.getElementById('errorBox');
+    el.textContent = '⚠ ' + msg;
+    el.classList.add('visible');
+  }
+  function hideError() { document.getElementById('errorBox').classList.remove('visible'); }
+
+  function copyText() {
+    const t = document.getElementById('resultText').textContent;
+    navigator.clipboard.writeText(t).then(() => {
+      const btn = event.currentTarget;
+      btn.innerHTML = '<i class="fa fa-check"></i> Copied!';
+      setTimeout(() => btn.innerHTML = '<i class="fa fa-copy"></i> Copy', 2000);
+    });
+  }
+
+  function downloadText() {
+    const t = document.getElementById('resultText').textContent;
+    const name = (selectedFile?.name || 'audio').replace(/\.[^.]+$/, '') + '_transcript.txt';
+    const a = document.createElement('a');
+    a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(t);
+    a.download = name;
+    a.click();
+  }
+
+  function clearAll() {
+    selectedFile = null;
+    fileInput.value = '';
+    document.getElementById('fileInfo').classList.remove('visible');
+    document.getElementById('audioPlayerWrap').classList.remove('visible');
+    document.getElementById('audioPreview').src = '';
+    dropZone.classList.remove('has-file', 'drag-over');
+    document.getElementById('convertBtn').disabled = true;
+    hideResult(); hideError(); hideProgress();
+  }
+</script>
+{% endblock %}

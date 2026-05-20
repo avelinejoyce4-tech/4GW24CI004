@@ -1,0 +1,127 @@
+/* =====================================================
+   VoxAI Base Styles — Black / Red / White Design System
+   ===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg-primary:    #000000;
+  --bg-secondary:  #0a0a0a;
+  --bg-card:       #111111;
+  --bg-elevated:   #1a1a1a;
+  --accent-red:    #dc2626;
+  --accent-red-2:  #ef4444;
+  --accent-glow:   rgba(220,38,38,0.5);
+  --text-primary:  #ffffff;
+  --text-secondary:#a0a0a0;
+  --text-muted:    #505050;
+  --border:        rgba(255,255,255,0.08);
+  --border-red:    rgba(220,38,38,0.3);
+  --font-display:  'Orbitron', monospace;
+  --font-body:     'Rajdhani', sans-serif;
+  --font-mono:     'Space Mono', monospace;
+  --radius-sm:     8px;
+  --radius-md:     14px;
+  --radius-lg:     24px;
+  --shadow-red:    0 0 20px rgba(220,38,38,0.4), 0 0 40px rgba(220,38,38,0.2);
+  --shadow-card:   0 4px 24px rgba(0,0,0,0.5);
+  --transition:    0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--accent-red); border-radius: 2px; }
+
+/* ── Buttons ── */
+.btn-primary {
+  background: var(--accent-red);
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-red);
+}
+.btn-primary:hover {
+  background: var(--accent-red-2);
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(220,38,38,0.7);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-ghost:hover { border-color: var(--accent-red); color: var(--text-primary); }
+
+/* ── Form inputs ── */
+.input-field {
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: var(--transition);
+  outline: none;
+}
+.input-field:focus {
+  border-color: var(--accent-red);
+  box-shadow: 0 0 12px rgba(220,38,38,0.2);
+}
+.input-field::placeholder { color: var(--text-muted); }
+
+/* ── Glow utils ── */
+.glow-red { box-shadow: var(--shadow-red); }
+.text-red { color: var(--accent-red); }
+
+/* ── Fade in ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.fade-up { animation: fadeUp 0.5s ease forwards; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-red);
+  color: var(--text-primary);
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  z-index: 9999;
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.error { border-color: var(--accent-red); }
+.toast.success { border-color: #16a34a; }

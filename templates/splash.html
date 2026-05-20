@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoxAI</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:#000;
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh; overflow:hidden; font-family:'Rajdhani',sans-serif;
+}
+.splash-container {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  animation: fadeIn 0.5s ease;
+}
+@keyframes fadeIn { from{opacity:0;transform:scale(0.8)} to{opacity:1;transform:scale(1)} }
+
+.logo-ring {
+  width:200px; height:200px; border-radius:50%;
+  background:radial-gradient(circle, #1a1a2e 0%, #0d0d0d 100%);
+  border:3px solid #e00;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 0 40px rgba(220,0,0,0.6), 0 0 80px rgba(220,0,0,0.3), inset 0 0 30px rgba(220,0,0,0.1);
+  animation: pulse-ring 2s ease-in-out infinite;
+  position:relative;
+}
+@keyframes pulse-ring {
+  0%,100% { box-shadow: 0 0 40px rgba(220,0,0,0.6), 0 0 80px rgba(220,0,0,0.3); }
+  50% { box-shadow: 0 0 60px rgba(220,0,0,0.9), 0 0 120px rgba(220,0,0,0.5); }
+}
+.logo-inner {
+  width:170px; height:170px; border-radius:50%;
+  background:white;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+.logo-inner img { width:130px; height:130px; object-fit:contain; }
+.logo-inner .logo-svg {
+  width:130px; height:130px;
+}
+
+.app-name {
+  margin-top:30px;
+  font-family:'Orbitron',sans-serif;
+  font-size:3rem; font-weight:900;
+  color:#fff;
+  letter-spacing:8px;
+  text-shadow: 0 0 20px #e00, 0 0 40px rgba(220,0,0,0.5);
+  animation: glowText 2s ease-in-out infinite;
+}
+@keyframes glowText {
+  0%,100% { text-shadow: 0 0 20px #e00, 0 0 40px rgba(220,0,0,0.5); }
+  50% { text-shadow: 0 0 30px #e00, 0 0 60px rgba(220,0,0,0.8), 0 0 90px rgba(220,0,0,0.3); }
+}
+.tagline {
+  margin-top:10px; color:#888;
+  font-family:'Rajdhani',sans-serif; font-size:1rem; letter-spacing:3px;
+  text-transform:uppercase;
+}
+.loading-bar-container {
+  margin-top:40px; width:200px; height:3px;
+  background:rgba(220,0,0,0.2); border-radius:2px; overflow:hidden;
+}
+.loading-bar {
+  height:100%; width:0%;
+  background:linear-gradient(90deg,#e00,#ff6666);
+  animation: load 2.5s ease-in-out forwards;
+  box-shadow: 0 0 10px #e00;
+}
+@keyframes load { 0%{width:0%} 100%{width:100%} }
+</style>
+</head>
+<body>
+<div class="splash-container">
+  <div class="logo-ring">
+    <div class="logo-inner">
+      <!-- Inline VoxAI logo SVG -->
+      <svg class="logo-svg" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="65" cy="65" r="63" fill="white"/>
+        <!-- Waveform + checkmark icon -->
+        <polyline points="15,65 25,65 30,45 38,80 46,55 54,72 62,62 72,85 82,42 92,70 100,65 115,65"
+          fill="none" stroke="url(#grad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="82,42 92,70 100,55 108,40"
+          fill="none" stroke="url(#grad2)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="65" y="108" text-anchor="middle" font-family="'Rajdhani',sans-serif" font-size="18" font-weight="700" fill="#1a3a6b">VOX AI</text>
+        <defs>
+          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#1a3a8f"/>
+            <stop offset="100%" style="stop-color:#00b4b4"/>
+          </linearGradient>
+          <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#1a8a8a"/>
+            <stop offset="100%" style="stop-color:#00d4a0"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+  <div class="app-name">VOX AI</div>
+  <div class="tagline">Voice Intelligence for Everyone</div>
+  <div class="loading-bar-container">
+    <div class="loading-bar"></div>
+  </div>
+</div>
+<script>
+  setTimeout(() => { window.location.href = '/login'; }, 3000);
+</script>
+</body>
+</html>

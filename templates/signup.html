@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoxAI — Create Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: #0e0e0f;
+      color: #fff;
+      min-height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .root {
+      min-height: 100vh;
+      background: #0e0e0f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    /* ── Keyframes ── */
+    @keyframes redShiny {
+      0%   { background-position: -200% center; }
+      100% { background-position:  200% center; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-6px); }
+      60%     { transform: translateX(6px); }
+    }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+    @keyframes slideInFromRight {
+      from { opacity: 0; transform: translateX(100vw); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideOutToLeft {
+      from { opacity: 1; transform: translateX(0); }
+      to   { opacity: 0; transform: translateX(-110vw); }
+    }
+    @keyframes borderGlow {
+      0%, 100% { opacity: 0.5; }
+      50%      { opacity: 1; }
+    }
+
+    /* ── Card ── */
+    .card {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 20px;
+      padding: 40px 40px 36px;
+      background: #151516;
+      box-shadow:
+        0 0 0 1px rgba(200,30,30,0.22),
+        0 0 32px rgba(180,0,0,0.12),
+        0 28px 70px rgba(0,0,0,0.55);
+      animation: slideInFromRight 0.70s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      padding: 1px;
+      background: linear-gradient(
+        155deg,
+        rgba(255,60,60,0.85)  0%,
+        rgba(180,20,20,0.28) 35%,
+        rgba(140,0,0,0.05)   55%,
+        rgba(180,20,20,0.28) 75%,
+        rgba(255,60,60,0.85) 100%
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      animation: borderGlow 3s ease-in-out infinite;
+    }
+    .card.leaving {
+      animation: slideOutToLeft 0.55s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+    }
+
+    /* ── Logo ── */
+    .logo-row {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 22px;
+    }
+    .logo-icon { width: 36px; height: 36px; flex-shrink: 0; }
+    .logo-name  { font-size: 1.10rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+
+    /* ── Headline ── */
+    .headline {
+      font-size: 1.85rem; font-weight: 800;
+      letter-spacing: -0.05em; line-height: 1.02; margin-bottom: 7px;
+    }
+    .headline-plain { color: #fff; display: block; }
+    .headline-shiny {
+      display: block;
+      background-image: linear-gradient(
+        to right,
+        #1a0000 0%, #6b0000 15%, #ff7070 35%,
+        #ff2525 50%, #6b0000 65%, #1a0000 85%, #1a0000 100%
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      animation: redShiny 5s linear infinite;
+    }
+    .sub {
+      font-size: 0.80rem; color: rgba(255,255,255,0.32);
+      margin-bottom: 22px; line-height: 1.5;
+    }
+
+    /* ── Form ── */
+    .form-body { display: flex; flex-direction: column; gap: 13px; }
+
+    .field-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 13px;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label {
+      font-size: 0.69rem; font-weight: 600;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.07em; text-transform: uppercase;
+    }
+    .input-wrap { position: relative; }
+
+    /* Inputs and selects share base styles */
+    .field input,
+    .field select {
+      width: 100%;
+      background: #1c1c1e;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 0.855rem;
+      font-family: inherit; color: #fff; outline: none;
+      appearance: none; -webkit-appearance: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .field input.has-icon { padding-right: 42px; }
+    .field select { padding-right: 32px; cursor: pointer; }
+    .field select option { background: #1c1c1e; color: #fff; }
+    .field input::placeholder { color: rgba(255,255,255,0.18); }
+    .field input:focus,
+    .field select:focus {
+      border-color: rgba(210,30,30,0.55);
+      background: #1f1919;
+      box-shadow: 0 0 0 3px rgba(200,20,20,0.13);
+    }
+    .field input.shake {
+      animation: shake 0.35s ease;
+      border-color: rgba(239,68,68,0.70);
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.10);
+    }
+
+    /* Custom select chevron */
+    .select-wrap { position: relative; }
+    .select-arrow {
+      position: absolute; right: 11px; top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none; color: rgba(255,255,255,0.28); display: flex;
+    }
+
+    /* Eye toggle */
+    .eye-btn {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.25); display: flex; padding: 2px;
+      transition: color 0.18s;
+    }
+    .eye-btn:hover { color: rgba(255,255,255,0.55); }
+
+    /* Location row */
+    .loc-wrap { display: flex; }
+    .loc-wrap input {
+      flex: 1;
+      border-radius: 10px 0 0 10px;
+      border-right: none;
+      padding-right: 14px;
+    }
+    .loc-btn {
+      flex-shrink: 0; width: 42px;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-left: none;
+      background: #cc1a1a;
+      border-radius: 0 10px 10px 0;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; transition: background 0.2s;
+    }
+    .loc-btn:hover { background: #e52020; }
+
+    /* ── Banners ── */
+    .err-banner {
+      display: none; font-size: 0.760rem; color: #fca5a5;
+      background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.22);
+      border-radius: 9px; padding: 8px 12px; line-height: 1.45;
+    }
+    .err-banner.show { display: block; animation: fadeUp 0.25s ease; }
+
+    .ok-banner {
+      display: none; font-size: 0.760rem; color: #6ee7b7;
+      background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.20);
+      border-radius: 9px; padding: 8px 12px; line-height: 1.45;
+    }
+    .ok-banner.show { display: block; animation: fadeUp 0.25s ease; }
+
+    /* ── Button ── */
+    .btn-primary {
+      width: 100%;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      border-radius: 100px; background: #cc1a1a; color: #fff;
+      font-family: inherit; font-size: 0.875rem; font-weight: 700;
+      border: none; padding: 13px 20px; cursor: pointer;
+      letter-spacing: 0.02em; margin-top: 2px;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover  { background: #e52020; box-shadow: 0 6px 22px rgba(200,20,20,0.35); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .spin {
+      display: none; width: 13px; height: 13px;
+      border: 2px solid rgba(255,255,255,0.22);
+      border-top-color: #fff; border-radius: 50%;
+      animation: rotate 0.55s linear infinite;
+    }
+    .btn-primary.loading .spin      { display: block; }
+    .btn-primary.loading .btn-label { display: none; }
+
+    /* ── Divider ── */
+    .divider { display: flex; align-items: center; gap: 10px; margin-top: 2px; }
+    .divider hr  { flex: 1; border: none; height: 1px; background: rgba(255,255,255,0.07); }
+    .divider span { font-size: 0.68rem; color: rgba(255,255,255,0.20); }
+
+    /* ── Switch ── */
+    .switch-row { text-align: center; font-size: 0.775rem; color: rgba(255,255,255,0.30); }
+    .switch-row a {
+      color: #e03030; font-weight: 600; cursor: pointer;
+      text-decoration: none; transition: color 0.15s;
+    }
+    .switch-row a:hover { color: #ff5555; }
+  </style>
+</head>
+<body>
+
+<div class="root">
+  <div class="card" id="signupCard">
+
+    <!-- Logo -->
+    <div class="logo-row">
+      <svg class="logo-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="18" fill="white"/>
+        <path d="M4 18 L9 18 L12 9 L15 27 L18 13 L21 21 L24 18 L32 18"
+              stroke="#cc1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="logo-name">VOX AI</span>
+    </div>
+
+    <!-- Headline -->
+    <h1 class="headline">
+      <span class="headline-plain">Create</span>
+      <span class="headline-shiny">Account.</span>
+    </h1>
+    <p class="sub">Join VoxAI today</p>
+
+    <!-- Form -->
+    <div class="form-body">
+
+      <!-- Full Name + Phone -->
+      <div class="field-row">
+        <div class="field">
+          <label for="name">Full Name</label>
+          <div class="input-wrap">
+            <input type="text" id="name" placeholder="Enter your name" autocomplete="name" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="phone">Phone</label>
+          <div class="input-wrap">
+            <input type="tel" id="phone" placeholder="10 digit mobile" maxlength="10" inputmode="numeric" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="field">
+        <label for="email">Email Address</label>
+        <div class="input-wrap">
+          <input type="email" id="email" placeholder="Enter your email" autocomplete="email" />
+        </div>
+      </div>
+
+      <!-- Language -->
+      <div class="field">
+        <label for="language">Select Language</label>
+        <div class="select-wrap">
+          <select id="language">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="ta">Tamil</option>
+            <option value="te">Telugu</option>
+            <option value="kn">Kannada</option>
+            <option value="ml">Malayalam</option>
+            <option value="mr">Marathi</option>
+            <option value="bn">Bengali</option>
+            <option value="gu">Gujarati</option>
+          </select>
+          <span class="select-arrow">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div class="field">
+        <label for="location">Location</label>
+        <div class="loc-wrap">
+          <input type="text" id="location" placeholder="City / District" autocomplete="address-level2" />
+          <button class="loc-btn" type="button" id="getLocationBtn" title="Detect my location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 2v3m0 14v3M2 12h3m14 0h3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <input type="password" id="password" class="has-icon" placeholder="Minimum 6 characters" autocomplete="new-password" />
+          <button class="eye-btn" type="button" onclick="togglePass()" tabindex="-1">
+            <svg id="eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg id="eye-closed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+              <line x1="1" y1="1" x2="23" y2="23"/>
+              <path d="M10.477 10.477A3 3 0 0 0 12 15a3 3 0 0 0 4.524-4.524"/>
+              <path d="M21.95 13.41A11.94 11.94 0 0 0 22 12S18 4 12 4a9.32 9.32 0 0 0-2.83.46"/>
+              <path d="M9.177 9.177A11.92 11.92 0 0 0 2.05 12S6 20 12 20c2.68 0 5.04-1.12 6.823-2.823"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Banners -->
+      <div class="err-banner" id="error-msg"></div>
+      <div class="ok-banner"  id="ok-msg"></div>
+
+      <!-- Submit -->
+      <button class="btn-primary" id="signupBtn" onclick="doSignup()">
+        <div class="spin"></div>
+        <span class="btn-label">Create Account</span>
+      </button>
+
+      <div class="divider"><hr /><span>or</span><hr /></div>
+      <p class="switch-row">Already have an account? <a href="/login">Sign In</a></p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+
+  /* ── Eye toggle ── */
+  function togglePass() {
+    const inp = $('password');
+    const isPass = inp.type === 'password';
+    inp.type = isPass ? 'text' : 'password';
+    $('eye-open').style.display   = isPass ? 'none' : '';
+    $('eye-closed').style.display = isPass ? ''     : 'none';
+  }
+
+  /* ── Banners ── */
+  function showError(msg) {
+    const el = $('error-msg');
+    el.textContent = msg;
+    el.classList.add('show');
+    $('ok-msg').classList.remove('show');
+  }
+  function showOk(msg) {
+    const el = $('ok-msg');
+    el.textContent = msg;
+    el.classList.add('show');
+    $('error-msg').classList.remove('show');
+  }
+  function clearBanners() {
+    $('error-msg').classList.remove('show');
+    $('ok-msg').classList.remove('show');
+  }
+
+  /* ── Shake field ── */
+  function shake(id) {
+    const el = $(id);
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+    setTimeout(() => el.classList.remove('shake'), 400);
+  }
+
+  /* ── Loading state ── */
+  function setLoading(on) {
+    const btn = $('signupBtn');
+    btn.classList.toggle('loading', on);
+    btn.disabled = on;
+  }
+
+  /* ── Validators (match doc6 logic) ── */
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(email);
+  }
+
+  /* ── Phone: digits only, max 10 (from doc6) ── */
+  $('phone').addEventListener('input', () => {
+    $('phone').value = $('phone').value.replace(/\D/g, '').slice(0, 10);
+  });
+
+  /* ── Location detect (from doc6) ── */
+  $('getLocationBtn').addEventListener('click', () => {
+    const inp = $('location');
+    if (!navigator.geolocation) { showError('Geolocation is not supported by your browser.'); return; }
+    inp.placeholder = 'Detecting…';
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        /* Use reverse geocoding for city name */
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`)
+          .then(r => r.json())
+          .then(d => {
+            const city = d.address.city || d.address.town || d.address.district || d.address.county || '';
+            inp.value = city || `${pos.coords.latitude.toFixed(2)}, ${pos.coords.longitude.toFixed(2)}`;
+            inp.placeholder = 'City / District';
+          })
+          .catch(() => {
+            /* Fallback to coordinates if reverse geocoding fails */
+            inp.value = `${pos.coords.latitude.toFixed(2)}, ${pos.coords.longitude.toFixed(2)}`;
+            inp.placeholder = 'City / District';
+          });
+      },
+      () => { inp.placeholder = 'City / District'; showError('Could not access location. Please enter manually.'); }
+    );
+  });
+
+  /* ── Main signup handler (logic from doc6, UI feedback from doc4) ── */
+  async function doSignup() {
+    const payload = {
+      name:     $('name').value.trim(),
+      phone:    $('phone').value.trim(),
+      email:    $('email').value.trim().toLowerCase(),
+      language: $('language').value,
+      location: $('location').value.trim(),
+      password: $('password').value
+    };
+
+    clearBanners();
+
+    /* ── Client-side validation (from doc6) ── */
+    if (!payload.name) {
+      shake('name');
+      showError('Please enter your full name.');
+      return;
+    }
+    if (!validateEmail(payload.email)) {
+      shake('email');
+      showError('Enter a valid email address.');
+      return;
+    }
+    if (payload.phone && !/^\d{10}$/.test(payload.phone)) {
+      shake('phone');
+      showError('Phone number must be exactly 10 digits.');
+      return;
+    }
+    if (!payload.password || payload.password.length < 6) {
+      shake('password');
+      showError('Password must be at least 6 characters.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      /* ── POST to Flask /signup (from doc6) ── */
+      const res = await fetch('/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        showOk('Account created successfully! Redirecting…');
+        /* Slide card out to left, then navigate to home (from doc4 animation) */
+        await delay(800);
+        $('signupCard').classList.add('leaving');
+        await delay(550);
+        window.location.href = '/home';
+      } else {
+        setLoading(false);
+        /* Shake relevant field based on server error message */
+        const msg = (data.message || '').toLowerCase();
+        if (msg.includes('email') || msg.includes('exists')) shake('email');
+        else if (msg.includes('phone'))  shake('phone');
+        else if (msg.includes('name'))   shake('name');
+        else if (msg.includes('password')) shake('password');
+        showError(data.message || 'Signup failed. Please try again.');
+      }
+    } catch (err) {
+      setLoading(false);
+      showError('Network error. Please check your connection and try again.');
+    }
+  }
+
+  /* ── Enter key ── */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSignup();
+  });
+</script>
+</body>
+</html>

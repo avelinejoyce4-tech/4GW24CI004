@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoxAI - Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<div class="auth-bg">
+  <div class="auth-particles" id="particles"></div>
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-ring">
+        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="60" height="60">
+          <circle cx="40" cy="40" r="38" fill="white"/>
+          <polyline points="8,40 14,40 18,26 24,52 30,34 36,45 40,38 46,54 52,24 58,43 62,40 72,40"
+            fill="none" stroke="url(#g1)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs><linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#1a3a8f"/><stop offset="100%" style="stop-color:#00d4a0"/>
+          </linearGradient></defs>
+        </svg>
+      </div>
+      <span class="auth-logo-text">VOX AI</span>
+    </div>
+    <h2 class="auth-title">Welcome Back</h2>
+    <p class="auth-sub">Sign in to your account</p>
+
+    <div id="error-msg" class="error-msg" style="display:none"></div>
+
+    <div class="form-group">
+      <label><i class="fa fa-envelope"></i> Email</label>
+      <input type="email" id="email" class="form-input" placeholder="Enter your email">
+    </div>
+    <div class="form-group">
+      <label><i class="fa fa-lock"></i> Password</label>
+      <div class="pass-wrap">
+        <input type="password" id="password" class="form-input" placeholder="Enter your password">
+        <i class="fa fa-eye pass-toggle" onclick="togglePass('password',this)"></i>
+      </div>
+    </div>
+    <button class="glow-btn" onclick="doLogin()">
+      <i class="fa fa-sign-in-alt"></i> Sign In
+    </button>
+    <p class="auth-switch">Don't have an account? <a href="/signup">Create Account</a></p>
+  </div>
+</div>
+<script src="/static/js/app.js"></script>
+<script>
+async function doLogin() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  if (!email || !password) { showError('Please fill all fields'); return; }
+  const res = await fetch('/login', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({email, password})
+  });
+  const data = await res.json();
+  if (data.success) { window.location.href = '/home'; }
+  else { showError(data.message || 'Login failed'); }
+}
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = msg; el.style.display='block';
+  setTimeout(()=>el.style.display='none', 3000);
+}
+function togglePass(id, icon) {
+  const inp = document.getElementById(id);
+  inp.type = inp.type==='password'?'text':'password';
+  icon.className = inp.type==='password'?'fa fa-eye pass-toggle':'fa fa-eye-slash pass-toggle';
+}
+document.addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+// Particles
+const canvas = document.createElement('canvas');
+canvas.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;';
+document.getElementById('particles').appendChild(canvas);
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+const pts = Array.from({length:60},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3}));
+function drawPts(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  pts.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0||p.x>canvas.width)p.vx*=-1;
+    if(p.y<0||p.y>canvas.height)p.vy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(220,0,0,0.4)';ctx.fill();
+  });
+  requestAnimationFrame(drawPts);
+}
+drawPts();
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoxAI — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: #0e0e0f;
+      color: #fff;
+      min-height: 100%;
+      overflow: hidden;
+    }
+
+    .root {
+      min-height: 100vh;
+      background: #0e0e0f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    /* ── Keyframes ── */
+    @keyframes redShiny {
+      0%   { background-position: -200% center; }
+      100% { background-position:  200% center; }
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-5px); }
+      60%     { transform: translateX(5px); }
+    }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+    @keyframes slideOutLeft {
+      from { opacity: 1; transform: translateX(0); }
+      to   { opacity: 0; transform: translateX(-110vw); }
+    }
+    @keyframes borderGlow {
+      0%, 100% { opacity: 0.55; }
+      50%      { opacity: 1; }
+    }
+
+    /* ── Card ── */
+    .card {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 20px;
+      padding: 44px 40px 40px;
+      background: #151516;
+      box-shadow:
+        0 0 0 1px rgba(200,30,30,0.25),
+        0 0 30px rgba(180,0,0,0.14),
+        0 32px 80px rgba(0,0,0,0.55);
+      animation: cardIn 0.75s cubic-bezier(.22,1,.36,1) both;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      padding: 1px;
+      background: linear-gradient(
+        160deg,
+        rgba(255,65,65,0.80) 0%,
+        rgba(180,20,20,0.30) 35%,
+        rgba(150,0,0,0.06)   55%,
+        rgba(180,20,20,0.30) 75%,
+        rgba(255,65,65,0.80) 100%
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      animation: borderGlow 3s ease-in-out infinite;
+    }
+    .card.leaving {
+      animation: slideOutLeft 0.50s cubic-bezier(.55,0,1,.45) forwards;
+    }
+
+    /* ── Logo ── */
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+    .logo-icon { width: 36px; height: 36px; flex-shrink: 0; }
+    .logo-name  { font-size: 1.10rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+
+    /* ── Headline ── */
+    .headline {
+      font-size: 2.05rem;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .headline-plain { color: #fff; display: block; }
+    .headline-shiny {
+      display: block;
+      background-image: linear-gradient(
+        to right,
+        #1a0000 0%, #6b0000 15%, #ff6b6b 35%,
+        #ff2525 50%, #6b0000 65%, #1a0000 85%, #1a0000 100%
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      animation: redShiny 5s linear infinite;
+    }
+
+    /* ── Sub ── */
+    .sub {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    /* ── Form ── */
+    .form-body { display: flex; flex-direction: column; gap: 14px; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label {
+      font-size: 0.70rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.38);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+    .input-wrap { position: relative; }
+    .field input {
+      width: 100%;
+      background: #1c1c1e;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 12px 42px 12px 14px;
+      font-size: 0.875rem;
+      font-family: inherit;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .field input::placeholder { color: rgba(255,255,255,0.18); }
+    .field input:focus {
+      border-color: rgba(210,30,30,0.55);
+      background: #1f1a1a;
+      box-shadow: 0 0 0 3px rgba(200,20,20,0.13);
+    }
+    .field input.shake {
+      animation: shake 0.35s ease;
+      border-color: rgba(239,68,68,0.70);
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.10);
+    }
+
+    /* Eye toggle */
+    .eye-btn {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.25); display: flex; padding: 2px;
+      transition: color 0.18s;
+    }
+    .eye-btn:hover { color: rgba(255,255,255,0.55); }
+
+    /* ── Error banner ── */
+    .err-banner {
+      display: none;
+      font-size: 0.775rem;
+      color: #fca5a5;
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.22);
+      border-radius: 9px;
+      padding: 9px 13px;
+      line-height: 1.45;
+    }
+    .err-banner.show { display: block; animation: cardIn 0.25s ease; }
+
+    /* ── Button ── */
+    .btn-primary {
+      width: 100%;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      border-radius: 100px;
+      background: #cc1a1a;
+      color: #fff;
+      font-family: inherit; font-size: 0.875rem; font-weight: 700;
+      border: none; padding: 13px 20px; cursor: pointer;
+      letter-spacing: 0.02em; margin-top: 2px;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover  { background: #e52020; box-shadow: 0 6px 22px rgba(200,20,20,0.35); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .spin {
+      display: none; width: 13px; height: 13px;
+      border: 2px solid rgba(255,255,255,0.22);
+      border-top-color: #fff; border-radius: 50%;
+      animation: rotate 0.55s linear infinite;
+    }
+    .btn-primary.loading .spin      { display: block; }
+    .btn-primary.loading .btn-label { display: none; }
+
+    /* ── Divider ── */
+    .divider { display: flex; align-items: center; gap: 10px; margin-top: 2px; }
+    .divider hr  { flex: 1; border: none; height: 1px; background: rgba(255,255,255,0.07); }
+    .divider span { font-size: 0.68rem; color: rgba(255,255,255,0.20); }
+
+    /* ── Switch row ── */
+    .switch-row { text-align: center; font-size: 0.775rem; color: rgba(255,255,255,0.30); }
+    .switch-row a {
+      color: #e03030; font-weight: 600; cursor: pointer;
+      text-decoration: none; transition: color 0.15s;
+    }
+    .switch-row a:hover { color: #ff5555; }
+  </style>
+</head>
+<body>
+
+<div class="root">
+  <div class="card" id="loginCard">
+
+    <!-- Logo -->
+    <div class="logo-row">
+      <svg class="logo-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="18" fill="white"/>
+        <path d="M4 18 L9 18 L12 9 L15 27 L18 13 L21 21 L24 18 L32 18"
+              stroke="#cc1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="logo-name">VOX AI</span>
+    </div>
+
+    <!-- Headline -->
+    <h1 class="headline">
+      <span class="headline-plain">Welcome</span>
+      <span class="headline-shiny">Back.</span>
+    </h1>
+    <p class="sub">Sign in to your account</p>
+
+    <!-- Form -->
+    <div class="form-body">
+
+      <div class="field">
+        <label for="email">Email Address</label>
+        <div class="input-wrap">
+          <input type="email" id="email" placeholder="Enter your email" autocomplete="email" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" />
+          <button class="eye-btn" type="button" onclick="togglePass()" tabindex="-1">
+            <svg id="eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg id="eye-closed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+              <line x1="1" y1="1" x2="23" y2="23"/>
+              <path d="M10.477 10.477A3 3 0 0 0 12 15a3 3 0 0 0 4.524-4.524"/>
+              <path d="M21.95 13.41A11.94 11.94 0 0 0 22 12S18 4 12 4a9.32 9.32 0 0 0-2.83.46"/>
+              <path d="M9.177 9.177A11.92 11.92 0 0 0 2.05 12S6 20 12 20c2.68 0 5.04-1.12 6.823-2.823"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Error banner -->
+      <div class="err-banner" id="error-msg"></div>
+
+      <!-- Submit -->
+      <button class="btn-primary" id="loginBtn" onclick="doLogin()">
+        <div class="spin"></div>
+        <span class="btn-label">Sign In</span>
+      </button>
+
+      <div class="divider"><hr /><span>or</span><hr /></div>
+      <p class="switch-row">Don't have an account? <a href="/signup">Create Account</a></p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+
+  /* ── Eye toggle ── */
+  function togglePass() {
+    const inp = $('password');
+    const isPass = inp.type === 'password';
+    inp.type = isPass ? 'text' : 'password';
+    $('eye-open').style.display   = isPass ? 'none' : '';
+    $('eye-closed').style.display = isPass ? ''     : 'none';
+  }
+
+  /* ── Show / hide error ── */
+  function showError(msg) {
+    const el = $('error-msg');
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+  function clearError() {
+    $('error-msg').classList.remove('show');
+    $('error-msg').textContent = '';
+  }
+
+  /* ── Shake field ── */
+  function shake(id) {
+    const el = $(id);
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+    setTimeout(() => el.classList.remove('shake'), 400);
+  }
+
+  /* ── Loading state ── */
+  function setLoading(on) {
+    const btn = $('loginBtn');
+    btn.classList.toggle('loading', on);
+    btn.disabled = on;
+  }
+
+  /* ── Main login handler ── */
+  async function doLogin() {
+    const email    = $('email').value.trim();
+    const password = $('password').value;
+    clearError();
+
+    /* Client-side validation */
+    if (!email) { shake('email'); showError('Please enter your email.'); return; }
+    if (!password) { shake('password'); showError('Please enter your password.'); return; }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        /* Slide card out, then navigate to home */
+        $('loginCard').classList.add('leaving');
+        await delay(500);
+        window.location.href = '/home';
+      } else {
+        setLoading(false);
+        /* Shake the relevant field based on server message */
+        const msg = (data.message || 'Login failed').toLowerCase();
+        if (msg.includes('email') || msg.includes('account') || msg.includes('user')) {
+          shake('email');
+        } else {
+          shake('password');
+        }
+        showError(data.message || 'Login failed. Please try again.');
+      }
+    } catch (err) {
+      setLoading(false);
+      showError('Network error. Please check your connection and try again.');
+    }
+  }
+
+  /* ── Enter key support ── */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+</script>
+</body>
+</html>

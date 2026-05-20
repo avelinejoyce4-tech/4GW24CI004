@@ -1,0 +1,136 @@
+<!-- ============================================================
+  STEP 1: Add this <script> tag in your <head> of home.html
+  (This loads the marked.js markdown parser from CDN)
+============================================================ -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<!-- ============================================================
+  STEP 2: Add this CSS inside your <style> block in home.html
+  (Makes AI responses look like ChatGPT)
+============================================================ -->
+<style>
+  /* GPT-style markdown rendering */
+  .ai-message-content h1,
+  .ai-message-content h2,
+  .ai-message-content h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 12px 0 6px 0;
+    color: #e8edf3;
+  }
+  .ai-message-content p {
+    margin: 6px 0;
+    line-height: 1.65;
+  }
+  .ai-message-content ul,
+  .ai-message-content ol {
+    padding-left: 20px;
+    margin: 8px 0;
+  }
+  .ai-message-content li {
+    margin: 4px 0;
+    line-height: 1.6;
+  }
+  .ai-message-content strong {
+    color: #ffffff;
+    font-weight: 600;
+  }
+  .ai-message-content code {
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: monospace;
+    font-size: 0.88em;
+    color: #7dd3fc;
+  }
+  .ai-message-content pre {
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    padding: 12px;
+    overflow-x: auto;
+    margin: 10px 0;
+  }
+  .ai-message-content pre code {
+    background: none;
+    padding: 0;
+    color: #a5f3fc;
+  }
+  .ai-message-content a {
+    color: #38bdf8;
+    text-decoration: underline;
+  }
+  .ai-message-content blockquote {
+    border-left: 3px solid #38bdf8;
+    padding-left: 10px;
+    margin: 8px 0;
+    color: #94a3b8;
+  }
+  .ai-message-content hr {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin: 12px 0;
+  }
+
+  /* Typing cursor animation */
+  .typing-cursor::after {
+    content: '▋';
+    animation: blink 0.7s infinite;
+    color: #00e5a0;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+</style>
+
+<!-- ============================================================
+  STEP 3: Replace your existing addMessage() function in home.js
+  (or wherever you currently append chat messages)
+  
+  Find the function that creates AI message bubbles and replace
+  the part where you set the text content with this:
+============================================================ -->
+<script>
+// Configure marked for safe rendering
+marked.setOptions({
+  breaks: true,       // converts \n to <br>
+  gfm: true,          // GitHub-flavoured markdown
+  sanitize: false     // we trust our own AI output
+});
+
+/**
+ * Renders an AI reply with GPT-style markdown formatting.
+ * Call this instead of setting element.textContent = reply
+ *
+ * @param {HTMLElement} el   - The message bubble element
+ * @param {string}      text - The raw markdown text from the AI
+ */
+function renderMarkdown(el, text) {
+  el.classList.add('ai-message-content');
+  el.innerHTML = marked.parse(text);
+
+  // Make all links open in a new tab safely
+  el.querySelectorAll('a').forEach(a => {
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+  });
+}
+
+// ── EXAMPLE: how to use in your chat response handler ──
+//
+// When you receive the API response, instead of:
+//   messageBubble.textContent = data.reply;
+//
+// Do this:
+//   renderMarkdown(messageBubble, data.reply);
+//
+// If your existing code looks like:
+//   chatBox.innerHTML += `<div class="msg ai">${data.reply}</div>`;
+//
+// Change it to:
+//   const aiDiv = document.createElement('div');
+//   aiDiv.className = 'msg ai';
+//   renderMarkdown(aiDiv, data.reply);
+//   chatBox.appendChild(aiDiv);
+//   chatBox.scrollTop = chatBox.scrollHeight;
+</script>
