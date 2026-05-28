@@ -1,20 +1,20 @@
 <h1 align="center">Hi there, I'm Aveline Joyce! 👋</h1>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=F75C7E&center=true&vCenter=true&width=435&lines=2nd+Year+AIML+Engineering+Student;Python+%7C+Java+%7C+C+%7C+PHP+Developer;AI+%26+ML+Enthusiast;Always+Learning+%F0%9F%9A%80" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=F75C7E&center=true&vCenter=true&width=435&lines=2nd+Year+AIML+Engineering+Student;Python+Developer;AI+%26+ML+Enthusiast;Learner+%F0%9F%9A%80" alt="Typing SVG" />
 </p>
 
 ---
 
 ## 🙋‍♀️ About Me
 
-- 🎓 **2nd Year AIML Engineering Student** at **GSSSIETW College**
-- 🤖 Passionate about **Artificial Intelligence & Machine Learning**
-- 💻 Comfortable with **Python, C, Java, PHP** and building web projects
-- 🗄️ Local server experience with **WAMP & XAMPP**
-- ☁️ Completed courses in **AWS** and **Google Cloud Skill Boost**
-- 🌱 Currently deepening my knowledge in **DSA & AI/ML**
-- ⚡ My work ethic is built on **integrity, punctuality, and collaborative leadership**
+- 🎓 B.E. Student — Artificial Intelligence & Machine Learning | GSSSIETW (2nd Year)
+- 🤖 Focused on leveraging AI/ML to solve real-world problems
+- 💻 Skilled in Python, C, Java, and PHP | Experience in full-stack web development
+- 🗄️ Hands-on with local server deployment using WAMP and XAMPP
+- ☁️ Cloud-trained in AWS and Google Cloud Platform (Skill Boost)
+- 🌱 Currently advancing expertise in DSA and Machine Learning fundamentals
+- ⚡ Driven by integrity, accountability, and a collaborative approach to engineering
 
 ---
 
@@ -93,7 +93,7 @@
 ## 🤝 Connect With Me
 
 <p>
-  <a href="https://www.linkedin.com/in/your-linkedin-handle">
+  <a href="https://www.linkedin.com/in/aveline-joyce-8aaa1232a">
     <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"/>
   </a>
   <a href="https://github.com/avelinejoyce4-tech">
