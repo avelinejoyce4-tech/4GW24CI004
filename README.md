@@ -65,30 +65,6 @@
 
 ---
 
-## 📊 GitHub Stats
-
-<p align="center">
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=avelinejoyce4-tech&theme=radical" width="95%" />
-</p>
-
-<p align="center">
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=avelinejoyce4-tech&theme=radical" width="32%" />
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=avelinejoyce4-tech&theme=radical" width="32%" />
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=avelinejoyce4-tech&theme=radical" width="32%" />
-</p>
-
-<p align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=avelinejoyce4-tech&theme=radical&hide_border=true" width="60%"/>
-</p>
-
----
-
-## 🏅 Certifications
-
-- ☁️ **AWS** — Cloud Foundations Course
-- 🌐 **Google Cloud Skill Boost** — Multiple Skill Badges
-
----
 
 ## 🤝 Connect With Me
 
