@@ -15,7 +15,7 @@
 <br/><br/>
 
 <a href="#"><img src="https://img.shields.io/badge/Portfolio-C77DFF?style=for-the-badge&logo=vercel&logoColor=white&labelColor=0F0C29" /></a>
-<a href="#"><img src="https://img.shields.io/badge/LinkedIn-9D4EDD?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=0F0C29" /></a>
+<a href="https://www.linkedin.com/in/aveline-joyce-8aaa1232a"><img src="https://img.shields.io/badge/LinkedIn-9D4EDD?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=0F0C29" /></a>
 <a href="#"><img src="https://img.shields.io/badge/Email-7B2CBF?style=for-the-badge&logo=gmail&logoColor=white&labelColor=0F0C29" /></a>
 <a href="https://github.com/avelinejoyce4-tech"><img src="https://img.shields.io/badge/GitHub-6A0DAD?style=for-the-badge&logo=github&logoColor=white&labelColor=0F0C29" /></a>
 
@@ -75,7 +75,9 @@ I'm an AI/ML engineering student who builds production-shaped software — from 
 
 **Backend & Databases**
 
-<img src="https://skillicons.dev/icons?i=php,flask,nodejs,mysql,sqlite,mongodb&theme=dark" />
+<img src="https://skillicons.dev/icons?i=php,flask,nodejs,mysql,sqlite,mongodb,apache&theme=dark" />
+
+<sub>Local server deployment: WAMP · XAMPP</sub>
 
 **Cloud, DevOps & Tooling**
 
@@ -281,8 +283,8 @@ Actively contributing to open source as part of GirlScript Summer of Code 2026, 
 
 <div align="center">
 
-<img src="https://github-readme-stats.vercel.app/api?username=avelinejoyce4-tech&show_icons=true&theme=radical&hide_border=true&bg_color=0F0C29&title_color=C77DFF&icon_color=9D4EDD&text_color=E0AAFF" width="49%" />
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=avelinejoyce4-tech&theme=radical&hide_border=true&background=0F0C29&stroke=9D4EDD&ring=C77DFF&fire=C77DFF&currStreakLabel=E0AAFF" width="49%" />
+<img src="https://github-readme-stats.vercel.app/api?username=avelinejoyce4-tech&show_icons=true&theme=radical&hide_border=true&bg_color=0F0C29&title_color=C77DFF&icon_color=9D4EDD&text_color=E0AAFF&count_private=true" width="49%" />
+<img src="https://streak-stats.demolab.com/?user=avelinejoyce4-tech&theme=radical&hide_border=true&background=0F0C29&stroke=9D4EDD&ring=C77DFF&fire=C77DFF&currStreakLabel=E0AAFF" width="49%" />
 
 <br/>
 
@@ -322,9 +324,44 @@ Actively contributing to open source as part of GirlScript Summer of Code 2026, 
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/avelinejoyce4-tech/avelinejoyce4-tech/output/github-contribution-grid-snake-dark.svg" width="100%" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/avelinejoyce4-tech/avelinejoyce4-tech/output/github-contribution-grid-snake-dark.svg" />
+  <img alt="contribution snake animation" src="https://raw.githubusercontent.com/avelinejoyce4-tech/avelinejoyce4-tech/output/github-contribution-grid-snake.svg" width="100%" />
+</picture>
 
 </div>
+
+> ⚠️ This image only renders once the snake workflow below has run at least once in a repo named exactly `avelinejoyce4-tech` (a repo matching your username). Create that repo, add this file at `.github/workflows/snake.yml`, then push any commit or run it manually from the **Actions** tab:
+
+```yaml
+name: generate snake
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  generate:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Platane/snk@v3
+        with:
+          github_user_name: avelinejoyce4-tech
+          outputs: |
+            dist/github-contribution-grid-snake.svg
+            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+      - uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: output
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
 
 <br/>
 
@@ -362,7 +399,7 @@ open_to:
 <div align="center">
 
 <a href="#"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white&labelColor=0F0C29" /></a>
-<a href="#"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=0F0C29" /></a>
+<a href="https://www.linkedin.com/in/aveline-joyce-8aaa1232a"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=0F0C29" /></a>
 <a href="https://github.com/avelinejoyce4-tech"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white&labelColor=0F0C29" /></a>
 <a href="#"><img src="https://img.shields.io/badge/Portfolio-6A0DAD?style=for-the-badge&logo=vercel&logoColor=white&labelColor=0F0C29" /></a>
 
